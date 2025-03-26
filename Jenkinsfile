@@ -10,19 +10,6 @@ pipeline {
     }
 
     stages {
-        stage('Clone Repository') {
-            steps {
-                script {
-                    // Ensure directory exists
-                    if (fileExists(LOCAL_DIR)) {
-                        bat "rmdir /s /q ${LOCAL_DIR}"
-                    }
-                    // Clone the repo
-                    bat "git clone %GIT_REPO% %LOCAL_DIR%"
-                }
-            }
-        }
-
         stage('Build Docker Image') {
             steps {
                 script {
@@ -31,18 +18,6 @@ pipeline {
                 }
             }
         }
-
-        //stage('Run Docker Container') {
-        //    steps {
-          //      script {
-                    // Stop and remove the container if it exists
-            //        bat "docker stop %CONTAINER_NAME% || exit 0"
-              //      bat "docker rm %CONTAINER_NAME% || exit 0"
-                    // Run the new container
-                //    bat "docker run --rm --name %CONTAINER_NAME% %IMAGE_NAME%"
-                //}
-            //}
-        //}
 
         stage('Deploy with Ansible on WSL') {
             steps {

@@ -13,10 +13,6 @@
     - name: Run new Docker container
       command: docker run --name java_container -d javaimg:latest
 
-    - name: Wait for the container to start
-      pause:
-        seconds: 5
-
     - name: Get container logs
       command: docker logs java_container
       register: container_logs
