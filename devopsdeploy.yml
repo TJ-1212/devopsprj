@@ -11,4 +11,4 @@
       ignore_errors: yes
 
     - name: Run new Docker container
-      command: docker run --name java_container -d javaimg
+      command: docker run --name java_container -d javaimg:latest
