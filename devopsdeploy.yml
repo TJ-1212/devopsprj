@@ -1,0 +1,14 @@
+---
+- name: Deploy Java App on Docker
+  hosts: localhost
+  tasks:
+    - name: Stop existing Docker container
+      command: docker stop java_container
+      ignore_errors: yes
+
+    - name: Remove existing Docker container
+      command: docker rm java_container
+      ignore_errors: yes
+
+    - name: Run new Docker container
+      command: docker run --name java_container -d javaimg
