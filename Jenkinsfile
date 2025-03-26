@@ -6,7 +6,7 @@ pipeline {
         LOCAL_DIR = 'E:\\devopsprj'
         DOCKER_IMAGE = 'javaimg:latest'
         DOCKER_CONTAINER = 'java_container'
-        WSL_ANSIBLE_SCRIPT = '/mnt/e/devopsprj/deploy.yml'
+        WSL_ANSIBLE_SCRIPT = '/mnt/e/devopsprj/devopsdeploy.yml'
     }
 
     stages {
@@ -36,10 +36,10 @@ pipeline {
             steps {
                 script {
                     // Stop and remove the container if it exists
-                    bat "docker stop %DOCKER_CONTAINER% || exit 0"
-                    bat "docker rm %DOCKER_CONTAINER% || exit 0"
+                    //bat "docker stop %DOCKER_CONTAINER% || exit 0"
+                    //bat "docker rm %DOCKER_CONTAINER% || exit 0"
                     // Run the new container
-                    bat "docker run -d --name %DOCKER_CONTAINER% %DOCKER_IMAGE%"
+                    bat "docker run --rm --name %CONTAINER_NAME% %DOCKER_IMAGE%"
                 }
             }
         }
