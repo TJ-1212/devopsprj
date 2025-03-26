@@ -2,9 +2,10 @@ pipeline {
     agent any
 
     environment {
-        GIT_REPO = 'https://github.com/TJ-1212/devopsprj.git' // Use SSH URL
-        DOCKER_IMAGE = 'javaimg'
-        CONTAINER_NAME = 'java_container'
+        GIT_REPO = 'https://github.com/TJ-1212/devopsprj.git'
+        LOCAL_DIR = 'E:\\devopsprj'
+        DOCKER_IMAGE = 'javaimg:latest'
+        DOCKER_CONTAINER = 'java_container'
         WSL_ANSIBLE_SCRIPT = '/mnt/e/devopsprj/deploy.yml'
     }
 
@@ -12,15 +13,12 @@ pipeline {
         stage('Clone Repository') {
             steps {
                 script {
-                    bat 'git clone ${GIT_REPO} E:\\devopsprj'
-                }
-            }
-        }
-
-        stage('Build Java Application') {
-            steps {
-                script {
-                    bat 'javac E:\\devopsprj\\HelloWorld.java'
+                    // Ensure directory exists
+                    if (fileExists(LOCAL_DIR)) {
+                        bat "rmdir /s /q ${LOCAL_DIR}"
+                    }
+                    // Clone the repo
+                    bat "git clone %GIT_REPO% %LOCAL_DIR%"
                 }
             }
         }
@@ -28,7 +26,8 @@ pipeline {
         stage('Build Docker Image') {
             steps {
                 script {
-                    bat 'docker build -t javaimg E:\\devopsprj'
+                    // Navigate to project directory
+                    bat "cd /d %LOCAL_DIR% && docker build -t %DOCKER_IMAGE% ."
                 }
             }
         }
@@ -36,23 +35,22 @@ pipeline {
         stage('Run Docker Container') {
             steps {
                 script {
-                    bat 'docker run --name ${CONTAINER_NAME} -d javaimg'
+                    // Stop and remove the container if it exists
+                    bat "docker stop %DOCKER_CONTAINER% || exit 0"
+                    bat "docker rm %DOCKER_CONTAINER% || exit 0"
+                    // Run the new container
+                    bat "docker run -d --name %DOCKER_CONTAINER% %DOCKER_IMAGE%"
                 }
             }
         }
 
-        stage('Deploy Using Ansible in WSL') {
+        stage('Deploy with Ansible on WSL') {
             steps {
                 script {
-                    bat 'wsl ansible-playbook ${WSL_ANSIBLE_SCRIPT}'
+                    // Execute Ansible playbook inside WSL
+                    bat "wsl ansible-playbook %WSL_ANSIBLE_SCRIPT%"
                 }
             }
-        }
-    }
-
-    post {
-        always {
-            echo 'Pipeline Execution Completed'
         }
     }
 }
