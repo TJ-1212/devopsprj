@@ -13,6 +13,10 @@
     - name: Run new Docker container
       command: docker run --name java_container -d javaimg:latest
 
+    - name: Get container logs
+      command: docker logs java_container
+      register: container_logs
+
     - name: Display container output
       debug:
         msg: "{{ container_logs.stdout_lines }}"
