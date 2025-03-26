@@ -13,6 +13,14 @@
     - name: Run new Docker container
       command: docker run --name java_container -d javaimg:latest
 
-    - name: Display Java Program output
+    - name: Wait for the container to start
+      pause:
+        seconds: 5
+
+    - name: Get container logs
+      command: docker logs java_container
+      register: container_logs
+
+    - name: Display container output
       debug:
-	  msg: "{{ run_output.stdout}}"
+        msg: "{{ container_logs.stdout_lines }}"
