@@ -32,17 +32,17 @@ pipeline {
             }
         }
 
-        stage('Run Docker Container') {
-            steps {
-                script {
+        //stage('Run Docker Container') {
+        //    steps {
+          //      script {
                     // Stop and remove the container if it exists
-                    bat "docker stop %CONTAINER_NAME% || exit 0"
-                    bat "docker rm %CONTAINER_NAME% || exit 0"
+            //        bat "docker stop %CONTAINER_NAME% || exit 0"
+              //      bat "docker rm %CONTAINER_NAME% || exit 0"
                     // Run the new container
-                    bat "docker run --rm --name %CONTAINER_NAME% %IMAGE_NAME%"
-                }
-            }
-        }
+                //    bat "docker run --rm --name %CONTAINER_NAME% %IMAGE_NAME%"
+                //}
+            //}
+        //}
 
         stage('Deploy with Ansible on WSL') {
             steps {
